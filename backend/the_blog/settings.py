@@ -16,7 +16,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -73,7 +74,13 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # Own apps
-    'blog',
+    # 'blog',
+    'blog.adminlog',
+    'blog.blogs',
+    'blog.comment',
+    'blog.like',
+    'blog.report',
+    'blog.user',
 ]
 
 MIDDLEWARE = [
@@ -176,5 +183,5 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'blog.User'
+AUTH_USER_MODEL = 'user.User'
 LOGIN_URL = '/login/'
