@@ -1,12 +1,20 @@
 from django.db import models
+
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
     
+ACTION_CHOICES = [
+    ('BLOCK', 'Block Content'),
+    ('UNBLOCK', 'Unblock Content'),
+    ('DELETE', 'Delete Content'),
+    ('WARN', 'Warn User'),
+]
+
 class AdminLog(models.Model):
     admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='admin_logs')
-    action_type = models.CharField(max_length=100)
+    action_type = models.CharField(max_length=100, choices=ACTION_CHOICES)
     description = models.TextField(blank=True, null=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
