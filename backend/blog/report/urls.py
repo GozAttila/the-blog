@@ -1,5 +1,6 @@
-from django.urls import path
 from .views import ReportCreateView, ReportListView, ReportActionView
+
+from django.urls import path
 
 urlpatterns = [
     path('create/<str:content_type>/<int:object_id>/', ReportCreateView.as_view(), name='api-report-create'),

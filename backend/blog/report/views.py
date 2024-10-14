@@ -3,13 +3,13 @@ from blog.blogs.models import Blog
 from blog.comment.models import Comment
 from .serializers import ReportSerializer
 
+from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
-from django.contrib.contenttypes.models import ContentType
 
 class ReportCreateView(APIView):
     permission_classes = [IsAuthenticated]
@@ -52,19 +52,24 @@ class ReportActionView(APIView):
         report = get_object_or_404(Report, id=report_id)
         action = request.data.get('action')
 
-        if action == 'block':
-            content_object = report.content_object
-            if isinstance(content_object, Blog):
-                content_object.is_blocked = True
-                content_object.blocked_by = request.user
-                content_object.save()
-            elif isinstance(content_object, Comment):
-                content_object.is_blocked = True
-                content_object.blocked_by = request.user
-                content_object.save()
-            else:
-                return Response({'error': 'Invalid content type.'}, status=status.HTTP_400_BAD_REQUEST)
+        content_object = report.content_object
+        if not hasattr(content_object, 'is_blocked'):
+            return Response({'error': 'Invalid content type.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        if action == 'block':
+            if content_object.is_blocked:
+                return Response({'message': 'Content is already blocked and cannot be blocked again.'}, status=status.HTTP_403_FORBIDDEN)
+            content_object.is_blocked = True
+            content_object.blocked_by = request.user
+            content_object.save()
             return Response({'message': 'Content has been blocked.'}, status=status.HTTP_200_OK)
+
+        elif action == 'unblock':
+            if not content_object.is_blocked:
+                return Response({'message': 'Content is not blocked.'}, status=status.HTTP_400_BAD_REQUEST)
+            content_object.is_blocked = False
+            content_object.blocked_by = request.user  # Feloldó admin is bekerül a blocked_by mezőbe
+            content_object.save()
+            return Response({'message': 'Content has been unblocked.'}, status=status.HTTP_200_OK)
 
         return Response({'error': 'Invalid action.'}, status=status.HTTP_400_BAD_REQUEST)
