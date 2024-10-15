@@ -68,7 +68,7 @@ class ReportActionView(APIView):
             if not content_object.is_blocked:
                 return Response({'message': 'Content is not blocked.'}, status=status.HTTP_400_BAD_REQUEST)
             content_object.is_blocked = False
-            content_object.blocked_by = request.user  # Feloldó admin is bekerül a blocked_by mezőbe
+            content_object.blocked_by = request.user
             content_object.save()
             return Response({'message': 'Content has been unblocked.'}, status=status.HTTP_200_OK)
 

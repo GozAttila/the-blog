@@ -19,10 +19,11 @@ from django.urls import include, path
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    path('api/users/', include('blog.user.urls')),
+    path('api/adminlog/', include('blog.adminlog.urls')),
     path('api/blogs/', include('blog.blogs.urls')),
     path('api/comments/', include('blog.comment.urls')),
     path('api/likes/', include('blog.like.urls')),
-    path('api/adminlog/', include('blog.adminlog.urls')),
+    path('api/management/', include('blog.management.urls')),
     path('api/reports/', include('blog.report.urls')),   
+    path('api/users/', include('blog.user.urls')),
 ]

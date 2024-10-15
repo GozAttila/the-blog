@@ -62,26 +62,22 @@ class ViewsTests(APITestCase):
         self.assertFalse(Like.objects.first().is_like)
 
     def test_like_toggle(self):
-        # User likes the blog
         response = self.client.post(self.like_url, {'is_like': True})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Like.objects.count(), 1)
 
-        # User likes again to toggle off
         response = self.client.post(self.like_url, {'is_like': True})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Like.objects.count(), 0)  # Like should be removed
+        self.assertEqual(Like.objects.count(), 0)
 
     def test_dislike_toggle(self):
-        # User dislikes the blog
         response = self.client.post(self.like_url, {'is_like': False})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Like.objects.count(), 1)
 
-        # User dislikes again to toggle off
         response = self.client.post(self.like_url, {'is_like': False})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Like.objects.count(), 0)  # Dislike should be removed
+        self.assertEqual(Like.objects.count(), 0)
 
     def test_switch_reaction(self):
         self.client.post(self.like_url, {'is_like': True})

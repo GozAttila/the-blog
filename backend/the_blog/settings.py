@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'blog.blogs',
     'blog.comment',
     'blog.like',
+    'blog.management',
     'blog.report',
     'blog.user',
 ]

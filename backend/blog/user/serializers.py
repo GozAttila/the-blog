@@ -1,5 +1,7 @@
-from rest_framework import serializers
+from blog.utils.blacklist import is_valid_username
 from .models import User
+
+from rest_framework import serializers
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -7,6 +9,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+    def validate_username(self, value):
+        if not is_valid_username(value):
+            raise serializers.ValidationError("This username is not allowed.")
+        return value
 
     def create(self, validated_data):
         user = User(

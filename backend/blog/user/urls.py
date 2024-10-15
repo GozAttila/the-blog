@@ -1,5 +1,6 @@
-from django.urls import path
 from .views import register_user, CustomAuthToken
+
+from django.urls import path
 
 urlpatterns = [
     path('register/', register_user, name='api-register'),

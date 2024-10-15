@@ -3,7 +3,7 @@ from blog.comment.models import Comment
 from rest_framework import serializers
 
 class CommentSerializer(serializers.ModelSerializer):
-    blocked_by = serializers.StringRelatedField(read_only=True)  # Hozzáadjuk a blocked_by mezőt
+    blocked_by = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Comment
