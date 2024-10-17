@@ -28,6 +28,20 @@ class SerializersTests(APITestCase):
         self.assertEqual(user.email, 'newuser@example.com')
 
     def test_username_validation(self):
+        User.objects.create_user(
+            username='existinguser', 
+            email='existing@example.com', 
+            password='password123'
+        )
+        data = {
+            'username': 'existinguser', 
+            'email': 'newuser@example.com', 
+            'password': 'password123'
+        }
+        serializer = UserRegistrationSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('username', serializer.errors)
+
         data = {
             'username': 'neutralname',
             'email': 'neutral@example.com',
@@ -55,6 +69,21 @@ class SerializersTests(APITestCase):
             'password': 'password123'
         }
         self.assertTrue(UserRegistrationSerializer(data=data).is_valid())
+
+    def test_email_validation(self):
+        User.objects.create_user(
+            username='newuser2', 
+            email='existingemail@example.com', 
+            password='password123'
+        )
+        data = {
+            'username': 'newuser', 
+            'email': 'existingemail@example.com', 
+            'password': 'password123'
+        }
+        serializer = UserRegistrationSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn('email', serializer.errors)
 
 class ViewsTests(APITestCase):
     def setUp(self):
